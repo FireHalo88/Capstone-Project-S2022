@@ -1,0 +1,8 @@
+prefix=/home/tor/catkin_ws/devel
+
+Name: cute_xqtor_driver
+Description: Description of cute_xqtor_driver
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: rospy diagnostic_msgs dynamixel_driver

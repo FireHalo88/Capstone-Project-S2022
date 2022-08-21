@@ -1,0 +1,7 @@
+set(cute_servo_controllers_SETUP_PY_SETUP_MODULE "distutils.core")
+set(cute_servo_controllers_SETUP_PY_VERSION "0.0.0")
+set(cute_servo_controllers_SETUP_PY_SCRIPTS "")
+set(cute_servo_controllers_SETUP_PY_PACKAGES "cute_servo_controllers")
+set(cute_servo_controllers_SETUP_PY_PACKAGE_DIRS "src/cute_servo_controllers")
+set(cute_servo_controllers_SETUP_PY_MODULES "")
+set(cute_servo_controllers_SETUP_PY_MODULE_DIRS "")

@@ -1,0 +1,8 @@
+prefix=/home/tor/catkin_ws/install
+
+Name: robotics_cyton
+Description: Description of robotics_cyton
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: 

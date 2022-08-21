@@ -1,0 +1,8 @@
+prefix=/home/tor/catkin_ws/devel
+
+Name: robotics_cyton
+Description: Description of robotics_cyton
+Version: 0.0.0
+Cflags: -I/home/tor/catkin_ws/devel/include -I/home/tor/catkin_ws/src/cyton-robot-ros/robotics_cyton/include
+Libs: -L${prefix}/lib 
+Requires: 

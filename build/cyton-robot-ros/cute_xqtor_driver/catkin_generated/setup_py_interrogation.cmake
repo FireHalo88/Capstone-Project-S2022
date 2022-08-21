@@ -1,0 +1,7 @@
+set(cute_xqtor_driver_SETUP_PY_SETUP_MODULE "distutils.core")
+set(cute_xqtor_driver_SETUP_PY_VERSION "0.0.0")
+set(cute_xqtor_driver_SETUP_PY_SCRIPTS "")
+set(cute_xqtor_driver_SETUP_PY_PACKAGES "cute_xqtor_driver")
+set(cute_xqtor_driver_SETUP_PY_PACKAGE_DIRS "src/cute_xqtor_driver")
+set(cute_xqtor_driver_SETUP_PY_MODULES "")
+set(cute_xqtor_driver_SETUP_PY_MODULE_DIRS "")

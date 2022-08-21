@@ -1,0 +1,7 @@
+set(robotics_cyton_SETUP_PY_SETUP_MODULE "distutils.core")
+set(robotics_cyton_SETUP_PY_VERSION "0.0.0")
+set(robotics_cyton_SETUP_PY_SCRIPTS "")
+set(robotics_cyton_SETUP_PY_PACKAGES "robotics_cyton")
+set(robotics_cyton_SETUP_PY_PACKAGE_DIRS "src/robotics_cyton")
+set(robotics_cyton_SETUP_PY_MODULES "")
+set(robotics_cyton_SETUP_PY_MODULE_DIRS "")
