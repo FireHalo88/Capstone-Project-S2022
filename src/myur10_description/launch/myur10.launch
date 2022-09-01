@@ -5,7 +5,16 @@
   <arg name="gui" default="true" doc="Starts gazebo gui" />
   <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
   <arg name="model" default="$(find realsense2_description)/urdf/test_d435_camera.urdf.xacro"/>
-
+  <!--
+  <arg name="robot_name" default="" />
+  <arg name="x" default="3.0" />
+  <arg name="y" default="3.0" />
+  <arg name="z" default="10.0" />
+  <arg name="roll" default="0.0" />
+  <arg name="pitch" default="0.0" />
+  <arg name="yaw" default="0.0" />
+  <arg name="sdf_robot_file" default="" />
+  -->
   <!-- startup simulated world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <!-- <arg name="world_name" default="worlds/empty.world"/> -->
@@ -14,22 +23,27 @@
     <arg name="gui" value="$(arg gui)"/>
   </include>
 
-<param name="robot_description" command="$(find xacro)/xacro '$(find myur10_description)/urdf/myur10.urdf.xacro'
-transmission_hw_interface:=$(arg transmission_hw_interface)" />
+  <param name="robot_description" command="$(find xacro)/xacro '$(find myur10_description)/urdf/myur10.urdf.xacro'
+  transmission_hw_interface:=$(arg transmission_hw_interface)" />
 
-<!-- push robot_description to factory and spawn robot in gazebo -->
-<node name="spawn_gazebo_model" pkg = "gazebo_ros" type = "spawn_model" args="-urdf -param robot_description -model robot -z 0.0"
-respawn="false" output="screen" />
+  <!-- push robot_description to factory and spawn robot in gazebo -->
+  <node name="spawn_gazebo_model" pkg = "gazebo_ros" type = "spawn_model" args="-urdf -param robot_description -model robot -z 0.0"
+  respawn="false" output="screen"/>
 
-<!-- Add the Intel realsense to the UR5 End Effector -->
-<!-- <param name="realsense2_camera" command="$(find xacro)/xacro  '$(find camera)/urdf/ur5realsense.xacro' use_nominal_extrinsics:=true" /> -->
+  <!--Place stl model into environment-->
+  <!--<node name ="spawn_bottle" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+  args="-file $(arg sdf_robot_file) -sdf -x $(arg x) -y $(arg y) -z $(arg z) -R $(arg roll) -P $(arg pitch) -Y $(arg yaw) -model $(arg robot_name)" />
+  -->
+  <!-- Add your bottle code here -->
+  <!-- Add the Intel realsense to the UR5 End Effector -->
+  <!-- <param name="realsense2_camera" command="$(find xacro)/xacro  '$(find camera)/urdf/ur5realsense.xacro' use_nominal_extrinsics:=true" /> -->
 
-<!-- push camera to gazebo -->
-<!--<node name="spawn_camera" pkg="gazebo_ros" type="spawn_model" args="-urdf -param realsense2_camera -model camera -x 1 -y 1 -z 0" respawn="false" output="screen" />
--->
-<include file="$(find ur_gazebo)/launch/controller_utils.launch"/>
+  <!-- push camera to gazebo -->
+  <!--<node name="spawn_camera" pkg="gazebo_ros" type="spawn_model" args="-urdf -param realsense2_camera -model camera -x 1 -y 1 -z 0" respawn="false" output="screen" />
+  -->
+  <include file="$(find ur_gazebo)/launch/controller_utils.launch"/>
 
-<!-- start this controller -->
+  <!-- start this controller -->
   <rosparam file="$(find ur_gazebo)/controller/arm_controller_ur10.yaml" command="load"/>
   <node name="arm_controller_spawner" pkg="controller_manager" type="controller_manager" args="spawn arm_controller" respawn="false" output="screen"/>
 
