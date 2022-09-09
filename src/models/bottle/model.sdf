@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <model name="bottle">
+    <static>true</static>
+    <pose>0 0 0.0 0 0 0</pose>
+    <link name="link">
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>/home/tor/catkin_ws/src/myur10_description/models/bottle/meshes/mesh.stl</uri> 
+            <scale>0.002 0.002 0.002</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>/home/tor/catkin_ws/src/myur10_description/models/bottle/meshes/mesh.stl</uri> 
+            <scale>0.002 0.002 0.002</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/DarkGrey</name>
+          </script>
+          <lighting>true</lighting>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>
