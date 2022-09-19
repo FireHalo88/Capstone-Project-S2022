@@ -3,11 +3,17 @@ project(image_capture)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
-
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  moveit_ros_planning_interface
+  moveit_core
+  moveit_msgs
+  moveit_ros_planning
+  moveit_ros_warehouse
+  moveit_ros_manipulation
+  moveit_ros_move_group
   roscpp
   rospy
   std_msgs
@@ -119,6 +125,7 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  SYSTEM ${EIGEN3_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -206,4 +213,7 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 add_executable(imageCapture_node src/imageCapture.cpp)
-target_link_libraries(imageCapture_node ${catkin_LIBRARIES})
+target_link_libraries(imageCapture_node   ${catkin_LIBRARIES})
+#The Things Below were recently added, remove if you want to test the software
+
+

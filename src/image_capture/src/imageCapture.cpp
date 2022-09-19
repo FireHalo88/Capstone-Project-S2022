@@ -1,9 +1,27 @@
 using namespace std;
+// using namespace sensor_msgs;
+// using namespace message_filters;
 
+#include <time.h>
 #include <iostream>
+#include <fstream>
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
 #include <math.h>
+
+#include <moveit/robot_model_loader/robot_model_loader.h>
+
+#include <message_filters/subscriber.h>
+#include <message_filters/time_synchronizer.h>
+#include <sensor_msgs/Image.h>
+#include <sensor_msgs/CameraInfo.h>
+
+#include <ros/package.h>
+#include <ros/console.h>
+#include <image_transport/image_transport.h>
+#include <opencv2/highgui/highgui.hpp>
+#include <cv_bridge/cv_bridge.h>
+#include <sys/stat.h> 
 
 double joint_pos_global_1 = 1;
 double joint_pos_global_2 = 2;
@@ -11,165 +29,157 @@ double joint_pos_global_3 = 3;
 double joint_pos_global_4 = 4;
 double joint_pos_global_5 = 5;
 double joint_pos_global_6 = 6;
-//double test_array[];
+
+double previous_joint_1;
+double previous_joint_2;
+double previous_joint_3;
+double previous_joint_4;
+double previous_joint_5;
+double previous_joint_6;
+
+double fx;
+double fy;
+double cx;
+double cy;
+
+double test1;
+double test2;
+double test3;
+double test4;
+double test5;
+double test6;
+double test7;
+double test8;
+double test9;
+double test10;
+double test11;
+double test12;
+
+ros::Time current_time;
+ros::Time previous_time;
 
 void callback(const sensor_msgs::JointState::ConstPtr& msg)
 { 
-  // double joint_pos_global_1 = 1;
-  // double joint_pos_global_2 = 2;
-  // double joint_pos_global_3 = 3;
-  // double joint_pos_global_4 = 4;
-  // double joint_pos_global_5 = 5;
-  // double joint_pos_global_6 = 6;
-  //ROS_INFO("Received: ", msg->position);
-  // test_array = msg.get()->position;
+  current_time = ros::Time::now();
   joint_pos_global_1 = msg.get()->position[0];
   joint_pos_global_2 = msg.get()->position[1];
   joint_pos_global_3 = msg.get()->position[2];
   joint_pos_global_4 = msg.get()->position[3];
   joint_pos_global_5 = msg.get()->position[4];
-  joint_pos_global_6 = msg.get()->position[5];
-  //cout << "Subscriber works!";
+  joint_pos_global_6 = msg.get()->position[5];    
+  
+}
+
+void callback2(const sensor_msgs::CameraInfo::ConstPtr& cam_info) //(const ImageConstPtr& image, const CameraInfoConstPtr& cam_info)
+{
+  test1 = cam_info.get()->K[0];
+  test2 = cam_info.get()->K[1];
+  test3 = cam_info.get()->K[2];
+  test4 = cam_info.get()->K[3];
+
+  test5 = cam_info.get()->K[4];
+  test6 = cam_info.get()->K[5];
+  test7 = cam_info.get()->K[6];
+  test8 = cam_info.get()->K[7];
+
+  test9 = cam_info.get()->K[8];
+  
+}
+
+void callback3(const sensor_msgs::ImageConstPtr& img)
+{
+  cv::Mat image;
+  cv_bridge::CvImagePtr cv_ptr_depth;
+  if ( firstRGB ){
+        try{
+            cv_ptr_depth = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::TYPE_16UC1);
+        }
+        catch (cv_bridge::Exception& e){
+            ROS_ERROR("cv_bridge exception DEPTH: %s", e.what());
+            return ;
+        }
+        std::string filename = filename_home + "depth/depth_" + std::to_string(depthImages) + ".jpg";
+        cv::imwrite(filename ,cv_ptr_depth->image);
+        depthImages++;
+    }  
 }
 
 int main(int argc, char** argv) 
 {
-  //ROS_INFO("test");
-  //cout << "I'm stuck";
-  // ros::Time::init();
   ros::init(argc, argv, "listener");
 
   ros::NodeHandle nh; 
-  ros::Subscriber sub;
-  
-  sub = nh.subscribe ("joint_states", 1000, callback);
+  ros::NodeHandle cam_node;
 
+  ros::Subscriber sub;
+  ros::Subscriber cam_sub;
+  
+  // message_filters::Subscriber<sensor_msgs::JointState> image_sub(nh, "joint_states", 1000);
+  // message_filters::Subscriber<sensor_msgs::CameraInfo> info_sub(nh, "camera_info", 1);
+  // message_filters::TimeSynchronizer<sensor_msgs::JointState, sensor_msgs::CameraInfo> sync(image_sub, info_sub, 10);
+  // sync.registerCallback(boost::bind(&callback, _1, _2));
+
+  sub = nh.subscribe ("joint_states", 1000, callback);
+  cam_sub = cam_node.subscribe ("/camera/depth/camera_info", 1000, callback2);
+  // cam_sub = cam_node.subscribe ("camera_info", 1000, callback2); //("camera/depth/camera_info", 1000, callback2);
+
+  // cout << "Fx: " << fx << endl;
+  // cout << " " << endl;
+  // cout << current_time << endl;
+  // cout << "Joint 1: " << joint_pos_global_1 << endl;
+  // cout << "Joint 2: " << joint_pos_global_2 << endl;
+  // cout << "Joint 3: " << joint_pos_global_3 << endl;
+  // cout << "Joint 4: " << joint_pos_global_4 << endl;
+  // cout << "Joint 5: " << joint_pos_global_5 << endl;
+  // cout << "Joint 6: " << joint_pos_global_6 << endl;
+  // cout << "" << endl;
   ros::Rate loop_rate(1000);
-  // cout << "Just got out of the dryer";
-  // ros::spin(); 
-  //cout << ;
+  
   while (ros::ok())
   {
-    // joint_pos_global_1 = round(joint_pos_global_1);
-    // joint_pos_global_2 = round(joint_pos_global_2);
-    // joint_pos_global_3 = round(joint_pos_global_3);
-    // joint_pos_global_4 = round(joint_pos_global_4);
-    // joint_pos_global_5 = round(joint_pos_global_5);
-    // joint_pos_global_6 = round(joint_pos_global_6);
-
-    cout << "Joint 1: " << joint_pos_global_1 << endl;
-    cout << "Joint 2: " << joint_pos_global_2 << endl;
-    cout << "Joint 3: " << joint_pos_global_3 << endl;
-    cout << "Joint 4: " << joint_pos_global_4 << endl;
-    cout << "Joint 5: " << joint_pos_global_5 << endl;
-    cout << "Joint 6: " << joint_pos_global_6 << endl;
-    cout << "" << endl;
-    // ROS_INFO("Joint 1: ", joint_pos_global_1);
-    // ROS_INFO("Joint 2: ", joint_pos_global_2);
-    // ROS_INFO("Joint 3: ", joint_pos_global_3);
-    // ROS_INFO("Joint 4: ", joint_pos_global_4);
-    // ROS_INFO("Joint 5: ", joint_pos_global_5);
-    // ROS_INFO("Joint 6: ", joint_pos_global_6);
+    while (current_time != previous_time)
+    {
+      // cout << test1 << " " << test2 << " " << test3 << endl;
+      // cout << test4 << " " << test5 << " " << test6 << endl;
+      // cout << test7 << " " << test8 << " " << test9 << endl;
+      // cout << " " << endl;
+      // cout << test10 << " " << test11 << endl;
+      // cout << " " << endl;
+      // cout << current_time << endl;
+      // cout << "Joint 1: " << joint_pos_global_1 << endl;
+      // cout << "Joint 2: " << joint_pos_global_2 << endl;
+      // cout << "Joint 3: " << joint_pos_global_3 << endl;
+      // cout << "Joint 4: " << joint_pos_global_4 << endl;
+      // cout << "Joint 5: " << joint_pos_global_5 << endl;
+      // cout << "Joint 6: " << joint_pos_global_6 << endl;
+      // cout << "" << endl;
+      previous_time = current_time;
+      
+      if(previous_joint_1 != joint_pos_global_1 && previous_joint_2 != joint_pos_global_2 && previous_joint_3 != joint_pos_global_3 
+        && previous_joint_4 != joint_pos_global_4 && previous_joint_5 != joint_pos_global_5 && previous_joint_6 != joint_pos_global_6)
+      {
+        ofstream myfile ("Joint_Angles.txt", fstream::app);
+        if(myfile.is_open())
+        {
+          myfile << current_time << " " << joint_pos_global_1 << " " << 
+          joint_pos_global_2 << " " << joint_pos_global_3 << " " << joint_pos_global_4 << " "
+          << joint_pos_global_5 << " " << joint_pos_global_6 << "\n";
+          myfile.close();
+        }
+        previous_joint_1 = joint_pos_global_1;
+        previous_joint_2 = joint_pos_global_2;
+        previous_joint_3 = joint_pos_global_3;
+        previous_joint_4 = joint_pos_global_4;
+        previous_joint_5 = joint_pos_global_5;
+        previous_joint_6 = joint_pos_global_6;
+      }
+    }
+    
     ros::spinOnce();
     loop_rate.sleep();
   }
 
   ros::spin();
+
   return 0;
 }
-
-// #include <iostream>
-// #include <sensor_msgs/fill_image.h>
-// #include <sensor_msgs/point_cloud2_iterator.h>
-
-// #include "opencv2/opencv.hpp"
-// #include <iostream>
-// #include <sstream>
-// #include <string>
-// #include <iomanip>
-// #include <stdio.h>
-
-// #include <ros/ros.h>
-// #include <sensor_msgs/PointCloud2.h>
-// #include <sensor_msgs/image_encodings.h>
-
-// #include <boost/algorithm/string.hpp>
-// #include <boost/filesystem.hpp>
-// #include <std_msgs/String.h>
-// #include <thread>
-
-// #include <cv_bridge/cv_bridge.h>
-
-// #include <time.h>
-
-// #include "geometry_msgs/Point.h"
-// #include <rosbag/bag.h>
-// #include <rosbag/view.h>
-// #include <std_msgs/Int32.h>
-// #include <std_msgs/String.h>
-
-// #include <boost/foreach.hpp>
-// #define foreach BOOST_FOREACH
-
-// int main(int argc, char **argv)
-// {
-//   ros::init(argc, argv, "eyeInScreen");
-  
-//   ros::NodeHandle n;
-
-//   // rosbag::Bag bag("test.bag", rosbag::bagmode::Write);
-//   // std_msgs::Int32 i;
-//   // i.data = 42;
-//   // bag.write("numbers", ros::Time::now(), i);
-//   // bag.close();  
-
-//   // rosbag::Bag bag("test.bag");
-//   // rosbag::View view(bag, rosbag::TopicQuery("numbers"));
-//   // BOOST_FOREACH(rosbag::MessageInstance const m, view)
-//   // {
-//   //   std_msgs::Int32::ConstPtr i = m.instantiate<std_msgs::Int32>();
-//   //   if (i != NULL)
-//   //     std::cout << i->data << std::endl;
-//   // }
-//   // bag.close();
-
-//   //ros::init(argc, argv, "eyeInScreen");
- 
-//   /**
-//    * NodeHandle is the main access point to communications with the ROS system.
-//    * The first NodeHandle constructed will fully initialize this node, and the last
-//    * NodeHandle destructed will close down the node.
-//    */
-//   // ros::NodeHandle n;
- 
- 
-//   // ros::Publisher chatter_pub = n.advertise<geometry_msgs::Point>("/point", 10);
- 
-//   // ros::Rate loop_rate(10);
- 
-//   // int count = 0;
- 
-//   //rosbag::Bag bag;
-//   //bag.open("/home/rosbag_tests/test.bag", rosbag::bagmode::Read);
- 
-//   // std::vector<std::string> topics;
-//   // topics.push_back(std::string("chatter"));
-//   // topics.push_back(std::string("numbers"));
- 
-//   // rosbag::View view(bag, rosbag::TopicQuery(topics));
-//   // foreach(rosbag::MessageInstance const m, view)
-//   // {
-//   //     std_msgs::String::ConstPtr s = m.instantiate<std_msgs::String>();
-//   //     if (s != NULL)
-//   //         std::cout << s->data << std::endl;
- 
-//   //     std_msgs::Int32::ConstPtr i = m.instantiate<std_msgs::Int32>();
-//   //     if (i != NULL)
-//   //         std::cout << i->data << std::endl;
-//   // }
- 
-//   //bag.close();
- 
- 
-//   return 0;
-// }
