@@ -1,6 +1,4 @@
 using namespace std;
-// using namespace sensor_msgs;
-// using namespace message_filters;
 
 #include <time.h>
 #include <iostream>
@@ -23,6 +21,11 @@ using namespace std;
 #include <cv_bridge/cv_bridge.h>
 #include <sys/stat.h> 
 
+#include <stdio.h>
+
+static int depthImages;
+std::string filename_home = "/home/tor/bag2depthphotos/";
+
 double joint_pos_global_1 = 1;
 double joint_pos_global_2 = 2;
 double joint_pos_global_3 = 3;
@@ -37,11 +40,6 @@ double previous_joint_4;
 double previous_joint_5;
 double previous_joint_6;
 
-double fx;
-double fy;
-double cx;
-double cy;
-
 double test1;
 double test2;
 double test3;
@@ -51,9 +49,9 @@ double test6;
 double test7;
 double test8;
 double test9;
-double test10;
-double test11;
-double test12;
+
+
+char r;
 
 ros::Time current_time;
 ros::Time previous_time;
@@ -88,20 +86,53 @@ void callback2(const sensor_msgs::CameraInfo::ConstPtr& cam_info) //(const Image
 
 void callback3(const sensor_msgs::ImageConstPtr& img)
 {
-  cv::Mat image;
   cv_bridge::CvImagePtr cv_ptr_depth;
-  if ( firstRGB ){
-        try{
-            cv_ptr_depth = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::TYPE_16UC1);
-        }
-        catch (cv_bridge::Exception& e){
-            ROS_ERROR("cv_bridge exception DEPTH: %s", e.what());
-            return ;
-        }
-        std::string filename = filename_home + "depth/depth_" + std::to_string(depthImages) + ".jpg";
-        cv::imwrite(filename ,cv_ptr_depth->image);
-        depthImages++;
-    }  
+  
+  try
+  {
+    //cv_ptr_depth = cv_bridge::toCvCopy(img, sensor_msgs::image_encodings::TYPE_8SC1);
+    cv_ptr_depth = cv_bridge::toCvCopy(img, sensor_msgs::image_encodings::TYPE_16UC1);
+  }
+  catch(cv_bridge::Exception& e)
+  {
+    ROS_ERROR("cv_bridge exception: %s", e.what());
+    return;
+  }
+
+  //std::string filename = filename_home + "depth/depth_" + std::to_string(depthImages) + ".jpg";
+  char test [100];
+  sprintf(test,"/home/tor/catkin_ws/src/photo_collection/test_depth_image_%d.png", depthImages);
+  
+  // int height = cv_ptr_depth->image.rows;
+  // int width = cv_ptr_depth->image.cols;
+  // int step = cv_ptr_depth->image.step1();
+  // int channel = cv_ptr_depth->image.channels();
+  // int depth = cv_ptr_depth->image.depth();
+
+  // for(int i=0; i<cv_ptr_depth->image.rows; i++)     // Height
+  // {
+  //     //Go through all the columns
+  //     for(int j=0; j<cv_ptr_depth->image.cols; j++) // Width
+  //     {
+  //         //Go through all the channels (b, g, r)
+  //         for(int k=0; k<cv_ptr_depth->image.channels(); k++)
+  //         {
+  //             //Invert the image by subtracting image data from 255               
+  //             cv_ptr_depth->image.data[i*step+j*channel+k]=255-cv_ptr_depth->image.data[i*step+j*channel+k];
+  //         }
+  //     }
+  // }
+
+  // ofstream time2depth ("time2depth.txt", fstream::app);
+  // if(time2depth.is_open())
+  // {
+  //   time2depth << depthImages << " " << current_time << "\n";
+  //   time2depth.close();
+  // }  
+  
+  //Undo comment if you want to see them photos
+  //cv::imwrite(test,cv_ptr_depth->image);
+  depthImages++;      
 }
 
 int main(int argc, char** argv) 
@@ -109,9 +140,11 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "listener");
 
   ros::NodeHandle nh; 
+  ros::NodeHandle cam_info_node;
   ros::NodeHandle cam_node;
 
   ros::Subscriber sub;
+  ros::Subscriber cam_info_sub;
   ros::Subscriber cam_sub;
   
   // message_filters::Subscriber<sensor_msgs::JointState> image_sub(nh, "joint_states", 1000);
@@ -120,39 +153,18 @@ int main(int argc, char** argv)
   // sync.registerCallback(boost::bind(&callback, _1, _2));
 
   sub = nh.subscribe ("joint_states", 1000, callback);
-  cam_sub = cam_node.subscribe ("/camera/depth/camera_info", 1000, callback2);
-  // cam_sub = cam_node.subscribe ("camera_info", 1000, callback2); //("camera/depth/camera_info", 1000, callback2);
+  cam_info_sub = cam_info_node.subscribe ("/camera/depth/camera_info", 1000, callback2);
+  //Uncomment if you want to switch to automative photo creation
+  cam_sub = cam_node.subscribe("/camera/depth/image_raw", 1000, callback3);
 
-  // cout << "Fx: " << fx << endl;
-  // cout << " " << endl;
-  // cout << current_time << endl;
-  // cout << "Joint 1: " << joint_pos_global_1 << endl;
-  // cout << "Joint 2: " << joint_pos_global_2 << endl;
-  // cout << "Joint 3: " << joint_pos_global_3 << endl;
-  // cout << "Joint 4: " << joint_pos_global_4 << endl;
-  // cout << "Joint 5: " << joint_pos_global_5 << endl;
-  // cout << "Joint 6: " << joint_pos_global_6 << endl;
-  // cout << "" << endl;
+
   ros::Rate loop_rate(1000);
   
   while (ros::ok())
-  {
-    while (current_time != previous_time)
+  {    
+    while(current_time != previous_time)
     {
-      // cout << test1 << " " << test2 << " " << test3 << endl;
-      // cout << test4 << " " << test5 << " " << test6 << endl;
-      // cout << test7 << " " << test8 << " " << test9 << endl;
-      // cout << " " << endl;
-      // cout << test10 << " " << test11 << endl;
-      // cout << " " << endl;
-      // cout << current_time << endl;
-      // cout << "Joint 1: " << joint_pos_global_1 << endl;
-      // cout << "Joint 2: " << joint_pos_global_2 << endl;
-      // cout << "Joint 3: " << joint_pos_global_3 << endl;
-      // cout << "Joint 4: " << joint_pos_global_4 << endl;
-      // cout << "Joint 5: " << joint_pos_global_5 << endl;
-      // cout << "Joint 6: " << joint_pos_global_6 << endl;
-      // cout << "" << endl;
+
       previous_time = current_time;
       
       if(previous_joint_1 != joint_pos_global_1 && previous_joint_2 != joint_pos_global_2 && previous_joint_3 != joint_pos_global_3 
@@ -164,6 +176,10 @@ int main(int argc, char** argv)
           myfile << current_time << " " << joint_pos_global_1 << " " << 
           joint_pos_global_2 << " " << joint_pos_global_3 << " " << joint_pos_global_4 << " "
           << joint_pos_global_5 << " " << joint_pos_global_6 << "\n";
+
+          myfile << current_time << " " << test1 << " " << 
+          test2 << " " << test3 << " " << test4 << " "
+          << test5 << " " << test6 << test7 << " " << test8 << test9 << "\n";
           myfile.close();
         }
         previous_joint_1 = joint_pos_global_1;
@@ -173,7 +189,7 @@ int main(int argc, char** argv)
         previous_joint_5 = joint_pos_global_5;
         previous_joint_6 = joint_pos_global_6;
       }
-    }
+  }
     
     ros::spinOnce();
     loop_rate.sleep();
