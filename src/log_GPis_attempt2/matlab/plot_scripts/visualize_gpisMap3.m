@@ -49,11 +49,11 @@ p.EdgeColor = 'none';
 clt = camlight(0,20);
 lighting gouraud
 %axis([-1.62 1.62 -0.68 0.72 -0.37 0.22])
-axis([-0.5 0.22 -0.7 0.7 -0.37 0.37]) %-0.35:0.01:0.2, 0.4:0.01:0.7,-0.35:0.01:0.2
+axis([-2.0 2.0 -2.0 2.0 -2 2]) %-0.35:0.01:0.2, 0.4:0.01:0.7,-0.35:0.01:0.2
 shading interp
 
 ang = 20*pi/180;
-[xg2, yg2] = meshgrid(-0.4:0.01:0.25, 0.4:0.01:0.7);
+[xg2, yg2] = meshgrid(-1.4:0.01:1.98, -1.0:0.01:1.5);
 xtest2 = [xg2(:)'; yg2(:)'; 0.12*ones(1,numel(xg2))];
 R_ = [cos(ang) sin(ang) 0; -sin(ang) cos(ang) 0; 0 0 1];
 xtest2 = R_'*(xtest2-[0.04 0.02 0]') + [0.04 0.02 0]';
@@ -61,7 +61,7 @@ xtest2 = single(xtest2);
 res2 = mexGPisMap3('test',xtest2);
 a2 = res2(1,:);
 
-[yg3, zg3] = meshgrid(0.4:0.01:0.7, -0.35:0.01:0.2);
+[yg3, zg3] = meshgrid(-1.0:0.01:1.5, -1.5:0.01:1.5);
 xtest3 = [zeros(1,numel(yg3)); yg3(:)'; zg3(:)'];
 R_ = [cos(ang) sin(ang) 0; -sin(ang) cos(ang) 0; 0 0 1];
 xtest3 = R_'*xtest3 + [0.04 0 0]';

@@ -35,16 +35,27 @@ CamIDs = repmat([1 2 3 4 3 2],1,30);
 %numel(FrameNums)
 
 % test 3D volume grid -> Not Necessary for my own testing
-[xg, yg, zg ] = meshgrid(-0.4:0.01:0.25, 0.4:0.01:0.7,-0.35:0.01:0.2);
+%[xg, yg, zg ] = meshgrid(-1.4:0.01:0.98, -1.5:0.01:1.5,-0.5:0.01:0.3);
+[xg, yg, zg ] = meshgrid(-1.4:0.01:1.98, -1.0:0.01:1.5,-1.5:0.01:1.5);
 xtest1 = single([xg(:)'; yg(:)'; zg(:)']);
 
 count = 0;
+camCount = 0;
 %for k=1:3:numel(FrameNums) % This goes through roughly 40 steps
 %for k=1:13
-for k = 1
+for k = 1:2
     frmNo = FrameNums(k);
-    count = count + 1;    
-    camID = CamIDs(count);
+    count = count + 1;
+    %count = 2;
+    camCount = camCount + 1;
+%     if(camCount > 5)
+%         camCount = 1;
+%     end
+%     if k == 2
+%         k = 3;
+%         count = 3;
+%     end 
+    camID = CamIDs(camCount);
 
     %D = imread(fullfile(depthpath,sprintf('frame%d_cam%d.png',frmNo,camID)));
     %D = imread(fullfile(depthpath,sprintf('frame%d_cam%d.png',93,1))); %just testing specific photos dw
