@@ -38,13 +38,20 @@ static GPisMap3* gpm = 0;
 // static const int bigbirdCams_width = 1280;
 // static const int bigbirdCams_height = 720;
 
-//Spam camera parameters
-static const double bigbirdCams_fx[5] = {697.995, 698.995, 698.495 , 698.495, 698.245};
-static const double bigbirdCams_fy[5] = {697.995, 698.995, 698.495 , 698.495, 698.245};
-static const double bigbirdCams_cx[5] = {520.461, 519.533, 521.533, 521.665, 522.179};
-static const double bigbirdCams_cy[5] = {361.865, 363.488, 363.488, 363.488, 363.723};
+static const double bigbirdCams_fx[5] = {695.995, 695.995, 695.995, 695.995, 695.995};
+static const double bigbirdCams_fy[5] = {695.995, 695.995, 695.995, 695.995, 695.995};
+static const double bigbirdCams_cx[5] = {640, 640, 640, 640, 640};
+static const double bigbirdCams_cy[5] = {360, 360, 360, 360, 360};
 static const int bigbirdCams_width = 1280;
 static const int bigbirdCams_height = 720;
+
+//Bottle camera parameters
+// static const double bigbirdCams_fx[5] = {697.995, 698.995, 698.495 , 698.495, 698.245};
+// static const double bigbirdCams_fy[5] = {697.995, 698.995, 698.495 , 698.495, 698.245};
+// static const double bigbirdCams_cx[5] = {520.461, 519.533, 521.533, 521.665, 522.179};
+// static const double bigbirdCams_cy[5] = {361.865, 363.488, 363.488, 363.488, 363.723};
+// static const int bigbirdCams_width = 1280;
+// static const int bigbirdCams_height = 720;
 
 static const double YCBCams_fx[5] = {570.2590, 571.8461, 568.4464 , 566.9790, 574.0641};
 static const double YCBCams_fy[5] = {570.2636, 571.8428, 568.4494 , 566.9812, 574.0598};

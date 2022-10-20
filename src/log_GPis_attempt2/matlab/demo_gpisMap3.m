@@ -36,18 +36,20 @@ CamIDs = repmat([1 2 3 4 3 2],1,30);
 
 % test 3D volume grid -> Not Necessary for my own testing
 %[xg, yg, zg ] = meshgrid(-1.4:0.01:0.98, -1.5:0.01:1.5,-0.5:0.01:0.3);
-[xg, yg, zg ] = meshgrid(-1.4:0.01:1.98, -1.0:0.01:1.5,-1.5:0.01:1.5);
+%[xg, yg, zg ] = meshgrid(-1.4:0.01:0.6, -0.7:0.01:1.5,-0.4:0.01:1.6);
+[xg, yg, zg ] = meshgrid(-0.9:0.01:0.9, -1.2:0.01:1.8, 0.2:0.01:2.4);
 xtest1 = single([xg(:)'; yg(:)'; zg(:)']);
-
+    
 count = 0;
 camCount = 0;
 %for k=1:3:numel(FrameNums) % This goes through roughly 40 steps
 %for k=1:13
-for k = 1:2
+for k = 1:4
     frmNo = FrameNums(k);
     count = count + 1;
-    %count = 2;
+    %count = 4;
     camCount = camCount + 1;
+    %camCount = 4;
 %     if(camCount > 5)
 %         camCount = 1;
 %     end
@@ -60,7 +62,8 @@ for k = 1:2
     %D = imread(fullfile(depthpath,sprintf('frame%d_cam%d.png',frmNo,camID)));
     %D = imread(fullfile(depthpath,sprintf('frame%d_cam%d.png',93,1))); %just testing specific photos dw
     %D = imread(fullfile(depthpath,sprintf('frame%d_cam%d.png',8,1)));
-    D = imread(fullfile(depthpath,sprintf('frame%d.png',k)));
+    D = imread(fullfile(depthpath,sprintf('frame%d.png',k)));   
+    %D = imread(fullfile(depthpath,sprintf('small_frame%d.png',k)));  
     D = single(D)*single(0.0001); % 10 mm to meter
 
     T = reshape(poses(count,:),4,4);
