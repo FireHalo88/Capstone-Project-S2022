@@ -40,9 +40,13 @@ Here, you can add any models imported from Step 3 in the setup guide by clicking
 
 The following objects and locations were used in the simulation testing:
 
-Bottle & Checkerboard Location: X: 0.637778 Y: 0.314378 Z: 0.838695	Roll: 0.0 Pitch: 0 Yaw: -1.5708
+Bottle & Checkerboard Location: 
 
-Spam Location: X: 0.866 Y: 0.329 Z: 0.89 	Roll: 0.0 Pitch: 0.0 Yaw: -1.5708
+X: 0.637778 Y: 0.314378 Z: 0.838695	Roll: 0.0 Pitch: 0 Yaw: -1.5708
+
+Spam Location: 
+
+X: 0.866 Y: 0.329 Z: 0.89 	Roll: 0.0 Pitch: 0.0 Yaw: -1.5708
 
 2. Run the following command: 
 
@@ -61,6 +65,12 @@ NOTE: "/camera/depth/image_raw" may be phrased differently on your system.
 To find out how to record your depth images or to verify whether the other topics you're recording, type the following command after you have completed steps 1 and 2.
 
 *rostopic list -v*
+
+OPTIONAL: On top of collecting data through a rosbag, you may also run the following command in a separate terminal:
+
+*rosrun image_capture imageCapture_node*
+
+This would collect the camera's transformation and the depth images of the camera into a specific folder that will need to be edited to match your desired output directory. This would negate the time spent finding the forward kinematics of the camera through the manipulator's joint angles.
 
 4. To move the robot, use the following command: rosrun myur10_moveit_config move_group_python_interface.py
 
@@ -101,13 +111,32 @@ When RVIZ launches, set the link to camera_link and add the topic for depth imag
 
 5. Once you have moved the robot around either through FreeDrive mode or your own script, stop recording the data 
 
+
 ## Extracting data from a rosbag
 
-Coming Soon
+To collect the data needed from the rosbags, you need to navigate to the image_capture folder in a terminal. 
+
+Once here, you may type in the following command:
+
+*python bagtopng.py (Insert_rosbag_name_here) (Insert_folder_for_data_to_go_to) (Insert_topic_name)*
+
+Make sure before you type this line that you have the folder for the data to go to already made and the specific topic's section of code uncommented. Each section of code has been commented to identify which topic you are intenting to read from.
 
 ## Running Matlab Code
 
-Coming Soon
+Before continuing, ensure that all depth images and their associated transformations have been collected and the camera's parameters have been recorded.
+
+1. Navigate to Matlab GPIS Algorithm -> data and insert the transformations into poses and depth images into the masked_depth folder
+
+2. Insert your camera parameters into the make_GPisMap3.m file, which can be found in Matlab GPIS Algorithm -> mex
+
+Once this has been completed, run this file and wait till it has been completed before continuing.
+
+3. Navigate to the demo_gpisMap3.m in the folder named matlab and change the xg, yg and zg parameters in both this file and in visualize_gpisMap3.m. Make sure to also change the D parameter to analyse your depth images
+
+4. Run demo_gpisMap3.m, but comment out the line visualize_gpisMap3 to test whether there are any issues with the frame given.
+Failure to check may result in the Matlab application crashing.
+
 
 
 
