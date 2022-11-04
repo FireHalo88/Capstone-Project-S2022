@@ -1,0 +1,3 @@
+Hey Teresa, I've been having issues regarding the merging of bottle depth images to create a coherent 3D mesh for a few weeks now. The current results are as shown in the attached image. I've spoken to Lan Wu in person about these issues and she gave me a lot of help regarding how to collect the correct transformations and calibrating the camera to get the correct camera parameters. However, I don't believe that I'm close to getting the merging to work yet.
+
+However, I have been successful with the first frame, i.e. the second image attached. I feel as though, with the current time constraints with this project, that this paired with the irl image comparison should be enough to complete this project and the report. Hopefully you agree with me with this compromise. 
