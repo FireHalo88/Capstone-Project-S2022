@@ -29,6 +29,9 @@ Verify whether these files have been successfully placed in the folder using the
 
 *ls*
 
+## Downloading Rosbags 
+The following [link](https://drive.google.com/drive/folders/1kz0P6krpRbcyrF--drjNlVKChq2PfgoZ?usp=share_link) is to a google drive that contains both the real life and simulation rosbags used in the capstone report. 
+
 ## Running the Simulation
 The following steps are to successfully launch and move the robot/camera around the virtual test environment.
 
